@@ -6,6 +6,8 @@
 ![FFmpeg](https://img.shields.io/badge/FFmpeg-Required-orange.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
 
+<img width="5000" height="5000" alt="Image" src="https://github.com/user-attachments/assets/63903f9c-c48a-4ccc-8761-00b43086b34c" />
+
 A YouTube video and audio downloader powered by **yt-dlp**, designed to provide maximum compatibility with YouTube and Windows.
 
 ## Features
