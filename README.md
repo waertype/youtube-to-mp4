@@ -1,37 +1,56 @@
-# youtube-dl
+# YouTube Downloader
 
-Téléchargeur de vidéos et audio YouTube basé sur [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![yt-dlp](https://img.shields.io/badge/yt--dlp-Latest-green.svg)
+![Node.js](https://img.shields.io/badge/Node.js-LTS-brightgreen.svg)
+![FFmpeg](https://img.shields.io/badge/FFmpeg-Required-orange.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
 
-Gère les vidéos restreintes par l'âge (cookies), le n-challenge JavaScript (Node.js) et la compatibilité Windows (MP4/H.264 + AAC).
+A YouTube video and audio downloader powered by **yt-dlp**, designed to provide maximum compatibility with YouTube and Windows.
+
+## Features
+
+* Download videos in MP4 format
+* Download audio in MP3 format
+* Support for age-restricted videos
+* Support for YouTube's JavaScript *n-challenge*
+* Windows-compatible output (H.264 + AAC)
+* Command-line interface and interactive menu
 
 ---
 
-## Table des matières
+## Table of Contents
 
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Utilisation](#utilisation)
-- [Cookies YouTube](#cookies-youtube)
-- [Diagnostics](#diagnostics)
-- [Problèmes courants](#problèmes-courants)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Usage](#usage)
+* [YouTube Cookies](#youtube-cookies)
+* [Diagnostics](#diagnostics)
+* [Common Issues](#common-issues)
+* [Project Structure](#project-structure)
+* [License](#license)
 
 ---
 
-## Prérequis
+## Requirements
 
-| Outil | Rôle |
-|---|---|
-| [Python 3.10+](https://www.python.org/) | Exécuter les scripts |
-| [Node.js LTS](https://nodejs.org/) | Résoudre le n-challenge YouTube |
-| [FFmpeg](https://ffmpeg.org/) | Fusionner/convertir les flux |
+| Software     | Purpose                         |
+| ------------ | ------------------------------- |
+| Python 3.10+ | Run the scripts                 |
+| Node.js LTS  | Solve YouTube's n-challenge     |
+| FFmpeg       | Merge and convert media streams |
+
+---
 
 ## Installation
+
+Install the required dependencies:
 
 ```powershell
 python -m pip install -U yt-dlp python-certifi-win32
 ```
 
-Vérification :
+Verify your installation:
 
 ```powershell
 python --version
@@ -42,31 +61,33 @@ python -m yt_dlp --version
 
 ---
 
-## Utilisation
+## Usage
+
+Navigate to the project directory:
 
 ```powershell
 cd "D:\youtube mp4"
 ```
 
-### Télécharger une vidéo
+### Download a Video
 
 ```powershell
 python download_direct.py "https://www.youtube.com/watch?v=..." video
 ```
 
-### Télécharger l'audio (MP3)
+### Download Audio (MP3)
 
 ```powershell
 python download_direct.py "https://www.youtube.com/watch?v=..." audio
 ```
 
-### Télécharger dans un sous-dossier
+### Download to a Specific Folder
 
 ```powershell
 python download_direct.py "https://www.youtube.com/watch?v=..." video ".\downloads"
 ```
 
-### Menu interactif
+### Launch the Interactive Menu
 
 ```powershell
 python downloader.py
@@ -74,40 +95,53 @@ python downloader.py
 
 ---
 
-## Cookies YouTube
+## YouTube Cookies
 
-Nécessaires pour les vidéos restreintes par l'âge. L'export doit être fait **immédiatement après un rechargement de la page** pour capturer les cookies `google.com` (SAPISID, SID…) en plus des cookies `youtube.com` — sans eux, l'authentification échoue.
+Cookies are required for age-restricted or authenticated videos.
+
+For proper authentication, the `cookies.txt` file must be exported **immediately after refreshing the YouTube page** so that Google cookies (`SAPISID`, `SID`, etc.) are included along with YouTube cookies.
 
 ### Chrome / Edge / Brave
 
-1. Installer l'extension [Get cookies.txt LOCALLY](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
-2. Aller sur [youtube.com](https://www.youtube.com) et se connecter
-3. **Recharger la page** (`F5`)
-4. **Immédiatement** cliquer sur l'extension → **Export** → choisir *Netscape HTTP Cookie Format*
-5. Sauvegarder sous `D:\youtube mp4\cookies.txt`
+1. Install the **Get cookies.txt LOCALLY** extension
+2. Sign in to YouTube
+3. Refresh the page (`F5`)
+4. Immediately click the extension and select **Export**
+5. Choose **Netscape HTTP Cookie Format**
+6. Save the file as:
+
+```text
+D:\youtube mp4\cookies.txt
+```
 
 ### Firefox
 
-1. Installer l'extension [cookies.txt](https://addons.mozilla.org/fr/firefox/addon/cookies-txt/)
-2. Aller sur [youtube.com](https://www.youtube.com) et se connecter
-3. **Recharger la page** (`F5`)
-4. **Immédiatement** cliquer sur l'extension → **Export**
-5. Sauvegarder sous `D:\youtube mp4\cookies.txt`
+1. Install the **cookies.txt** extension
+2. Sign in to YouTube
+3. Refresh the page (`F5`)
+4. Immediately export the cookies
+5. Save the file as:
+
+```text
+D:\youtube mp4\cookies.txt
+```
 
 > [!WARNING]
-> Ne jamais partager `cookies.txt`. Ce fichier contient votre session de connexion.
+> Never share your `cookies.txt` file.
+>
+> It contains authentication data that may allow access to your YouTube account.
 
 ---
 
 ## Diagnostics
 
-Lister les formats disponibles :
+### List Available Formats
 
 ```powershell
 python -m yt_dlp --cookies cookies.txt --list-formats "URL"
 ```
 
-Lancer les tests :
+### Run Tests
 
 ```powershell
 python -m pytest test_downloader.py -v
@@ -115,37 +149,75 @@ python -m pytest test_downloader.py -v
 
 ---
 
-## Problèmes courants
+## Common Issues
 
-### `Sign in to confirm your age`
+### Sign in to confirm your age
 
-Réexporter `cookies.txt` : recharger YouTube (`F5`) puis exporter immédiatement (voir [Cookies YouTube](#cookies-youtube)).
+Your `cookies.txt` file is likely outdated or incomplete.
 
-### `n challenge solving failed`
+Solution:
 
-Node.js est absent ou non détecté. Installer [Node.js LTS](https://nodejs.org/) puis vérifier :
+1. Open YouTube
+2. Refresh the page (`F5`)
+3. Export cookies immediately
+4. Replace the existing `cookies.txt`
+
+---
+
+### n challenge solving failed
+
+Node.js is not installed or not detected.
+
+Verify installation:
 
 ```powershell
 node --version
 ```
 
-### `CERTIFICATE_VERIFY_FAILED`
+Install the latest LTS version of Node.js if needed.
+
+---
+
+### CERTIFICATE_VERIFY_FAILED
+
+Install the Windows certificate compatibility package:
 
 ```powershell
 python -m pip install python-certifi-win32
 ```
 
-### Base de données cookies verrouillée (Chrome / Edge)
+---
 
-Le navigateur est ouvert et verrouille sa base SQLite. Solutions :
-- Fermer le navigateur complètement puis réessayer
-- Utiliser Firefox (ne verrouille pas sa base)
-- Exporter `cookies.txt` manuellement (voir [Cookies YouTube](#cookies-youtube))
+### Cookie Database Locked (Chrome / Edge)
 
-### Audio illisible sous Windows
+Chrome and Edge may lock their SQLite cookie database.
 
-Convertir en AAC :
+Possible solutions:
+
+* Close the browser completely
+* Use Firefox
+* Export a `cookies.txt` file manually
+
+---
+
+### Audio Not Playing on Windows
+
+Convert the audio track to AAC:
 
 ```powershell
 ffmpeg -y -i "input.mp4" -c:v copy -c:a aac -b:a 192k "output.mp4"
+```
+
+---
+
+## Project Structure
+
+```text
+youtube-downloader/
+│
+├── downloader.py
+├── download_direct.py
+├── test_downloader.py
+├── cookies.txt
+└── README.md
 ```
